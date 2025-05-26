@@ -52,6 +52,7 @@ Seguridad Informática | Hacking Ético | Linux | Automatización
 Proyecto educativo
 ________________________________________
 Licencia
+
 Este proyecto es de uso libre con fines educativos.
 Distribuye, modifica o mejora con créditos al autor original.
 
