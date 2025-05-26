@@ -48,7 +48,9 @@ Soporte para Android (Termux)
 ________________________________________
 Autor
 ORAMI (2025)
+
 Seguridad Informática | Hacking Ético | Linux | Automatización
+
 Proyecto educativo
 ________________________________________
 Licencia
