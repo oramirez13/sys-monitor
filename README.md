@@ -20,7 +20,7 @@ Instalar dependencias:
 
 Uso
 Windows:
-  PS C:\Users\ruta\del\archivo> python .\sys_monitor.py
+  PS C:\Users\ruta\del\archivo\ python .\sys_monitor.py
 
 Linux / Termux:
   sudo python3 sys_monitor.py
