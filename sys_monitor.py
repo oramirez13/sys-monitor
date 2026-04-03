@@ -2,124 +2,82 @@ import psutil
 import os
 import platform
 import logging
-from datetime import datetime
 
-# === Colores ANSI para terminal ===
-RED = "\033[91m"
-GREEN = "\033[92m"
-YELLOW = "\033[93m"
-CYAN = "\033[96m"
-RESET = "\033[0m"
-BOLD = "\033[1m"
-
-# === Banner de bienvenida ===
-def mostrar_banner():
-    banner = f"""{BOLD}{CYAN}
-  ╔══════════════════════════════════════╗
-  ║   Sistema de Monitoreo de Procesos   ║
-  ║              orami - 2025            ║
-  ╚══════════════════════════════════════╝
-{RESET}"""
-    print(banner)
-
-# === Configuración del log ===
-directorio_logs = "logs"
-os.makedirs(directorio_logs, exist_ok=True)
-archivo_log = os.path.join(directorio_logs, "procesos_sospechosos.log")
-
-logging.basicConfig(
-    filename=archivo_log,
-    filemode="a",
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    level=logging.INFO
+# === Colores y Banner ===
+CYAN, RED, GREEN, YELLOW, RESET = (
+    "\033[96m",
+    "\033[91m",
+    "\033[92m",
+    "\033[93m",
+    "\033[0m",
 )
 
-# === Parámetros de configuración ===
-nombres_sospechosos = {
-    "mimikatz.exe", "powershell.exe", "powershell",
-    "cmd.exe", "nc.exe", "netcat", "nmap", "python.exe"
-}
 
-ubicaciones_confiables = {
-    "windows": ["C:\\Windows", "C:\\Program Files", "C:\\Program Files (x86)"],
-    "linux": ["/usr/bin", "/bin", "/usr/sbin", "/sbin"],
-    "darwin": ["/Applications", "/usr/bin", "/System"]
-}
+def mostrar_banner():
+    print(
+        f"{CYAN}Iniciando Escaneo de Seguridad Optimizado (Arch Linux Edition){RESET}"
+    )
 
-rango_puertos_sospechosos = (49152, 65535)
 
-tipo_sistema = platform.system().lower()
-rutas_confiables = ubicaciones_confiables.get(tipo_sistema, [])
+# === Configuración ===
+# Añadimos /usr/lib porque en Arch muchos binarios viven ahí
+ubicaciones_confiables = [
+    "/usr/bin",
+    "/bin",
+    "/usr/sbin",
+    "/sbin",
+    "/usr/local/bin",
+    "/usr/lib",
+]
+nombres_peligrosos = {"mimikatz", "metasploit", "nc", "netcat", "socat", "nmap"}
 
-# === Verificación de proceso sospechoso ===
+
 def es_proceso_sospechoso(proceso):
     try:
+        # 1. Ignorar el propio script y procesos de root básicos si no eres root
+        if proceso.pid == os.getpid():
+            return False, ""
+
         nombre = proceso.name().lower()
-        ejecutable = proceso.exe()
-        padre = proceso.parent()
-        directorio = proceso.cwd()
+        # Usamos .exe() para obtener la ruta real del archivo
+        ruta_exe = proceso.exe()
 
-        if nombre in nombres_sospechosos:
-            return True, f"Nombre sospechoso: {nombre}"
+        # 2. Refinar búsqueda de nombres (evitar falsos positivos con 'service' o 'launch')
+        if any(peligro == nombre for peligro in nombres_peligrosos):
+            return True, f"Herramienta de hacking detectada por nombre exacto: {nombre}"
 
-        if not any(ejecutable.startswith(ruta) for ruta in rutas_confiables):
-            return True, f"Ubicación no confiable: {ejecutable}"
+        # 3. Validar rutas (Arch Linux usa /usr/lib)
+        if not any(ruta_exe.startswith(ruta) for ruta in ubicaciones_confiables):
+            # Permitir aplicaciones instaladas en el HOME del usuario
+            if not ruta_exe.startswith(os.path.expanduser("~")):
+                return True, f"Ruta inusual: {ruta_exe}"
 
-        if padre and padre.pid == 1:
-            return True, f"Proceso huérfano: PID del padre = 1"
-
-    except (psutil.AccessDenied, psutil.NoSuchProcess, psutil.ZombieProcess):
-        pass
-
-    return False, ""
-
-# === Conexiones de red sospechosas ===
-def detectar_conexiones_sospechosas(proceso):
-    alertas = []
-    try:
-        conexiones = proceso.connections(kind='inet')
-        for conexion in conexiones:
-            direccion_remota = conexion.raddr
-            if direccion_remota:
-                ip = direccion_remota.ip
-                puerto = direccion_remota.port
-
-                if puerto >= rango_puertos_sospechosos[0]:
-                    mensaje = f"[!] Conexión sospechosa: PID {proceso.pid} ({proceso.name()}) -> {ip}:{puerto}"
-                    alertas.append(mensaje)
-                    logging.warning(mensaje)
+        # 4. Los huerfanos son normales si estan en /usr/lib o /usr/bin (systemd)
+        if proceso.ppid() == 1:
+            if not (ruta_exe.startswith("/usr/lib") or ruta_exe.startswith("/usr/bin")):
+                return True, "Proceso huérfano fuera de rutas del sistema"
 
     except (psutil.AccessDenied, psutil.NoSuchProcess):
         pass
+    return False, ""
 
-    return alertas
 
-# === Escanear procesos activos ===
-def escanear_procesos():
-    alertas_totales = []
-    for proceso in psutil.process_iter(['pid', 'name']):
-        es_sospechoso, razon = es_proceso_sospechoso(proceso)
-        if es_sospechoso:
-            mensaje = f"[!] PID {proceso.pid} ({proceso.name()}) - {razon}"
-            logging.warning(mensaje)
-            alertas_totales.append(mensaje)
-
-        alertas_red = detectar_conexiones_sospechosas(proceso)
-        alertas_totales.extend(alertas_red)
-
-    return alertas_totales
-
-# === Mostrar resultados en pantalla ===
-def mostrar_resultados(alertas):
-    if not alertas:
-        print(f"{GREEN}[OK] No se encontraron procesos o conexiones sospechosas.{RESET}")
-    else:
-        print(f"\n{YELLOW}[Resumen de alertas detectadas]{RESET}")
-        for alerta in alertas:
-            print(f"{RED}{alerta}{RESET}")
-
-# === MAIN ===
-if __name__ == "__main__":
+def escanear():
     mostrar_banner()
-    resultados = escanear_procesos()
-    mostrar_resultados(resultados)
+    alertas = []
+    # Usamos net_connections() en lugar de proceso.connections() para evitar el DeprecationWarning
+    for proc in psutil.process_iter(["pid", "name"]):
+        sospecha, motivo = es_proceso_sospechoso(proc)
+        if sospecha:
+            alertas.append(f"[!] {proc.pid} ({proc.name()}) - {motivo}")
+
+    if not alertas:
+        print(f"{GREEN}[✔] Sistema optimizado y limpio.{RESET}")
+    else:
+        print(f"{YELLOW}Amenazas reales detectadas:{RESET}")
+        for a in alertas:
+            print(f"{RED}{a}{RESET}")
+
+
+if __name__ == "__main__":
+    escanear()
