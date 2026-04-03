@@ -1,10 +1,6 @@
-Aquí tienes la versión profesional y limpia del README en formato Markdown, sin emojis, ideal para un perfil de GitHub más sobrio:
+# System Monitor: EDR Universal (Python)
 
----
-
-# Sentinel-Monitor: EDR Universal (Python)
-
-Sentinel-Monitor es una herramienta de detección y respuesta en endpoints (EDR) desarrollada en Python. Su objetivo es identificar procesos sospechosos y conexiones de red anómalas en tiempo real mediante el análisis de indicadores de compromiso (IoC) locales.
+System-Monitor es una herramienta de detección y respuesta en endpoints (EDR) desarrollada en Python. Su objetivo es identificar procesos sospechosos y conexiones de red anómalas en tiempo real mediante el análisis de indicadores de compromiso (IoC) locales.
 
 ---
 
@@ -27,7 +23,7 @@ El proyecto requiere Python 3.12+ y la librería psutil.
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/TU_USUARIO/sentinel-monitor.git
+git clone https://github.com/oramirez13/sentinel-monitor.git
 cd sentinel-monitor
 
 # Configurar entorno virtual (Recomendado)
@@ -82,7 +78,7 @@ El script utiliza una arquitectura de Escaneo Pasivo:
 
 ## Autor
 **ORAMI (2025)**
-Estudiante de Ciberseguridad | Entusiasta de Arch Linux | Desarrollador Python & C
+Estudiante de Ciberseguridad | Desarrollo Web | Python & C
 
 ---
 
