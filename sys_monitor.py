@@ -62,7 +62,9 @@ def es_proceso_sospechoso(process):
 
         # Si el padre es 1 y no viene de rutas de sistema conocidas, se marca.
         if process.ppid() == 1:
-            if not executable_path.startswith("/usr/lib") and not executable_path.startswith("/usr/bin"):
+            if not executable_path.startswith(
+                "/usr/lib"
+            ) and not executable_path.startswith("/usr/bin"):
                 return True, "Proceso huerfano fuera de rutas del sistema"
 
     except (psutil.AccessDenied, psutil.NoSuchProcess, psutil.ZombieProcess):
@@ -90,7 +92,9 @@ def escanear():
 
     # Si no hubo alertas, se informa con un mensaje simple.
     if len(alerts) == 0:
-        print(f"{GREEN}[+] No se detectaron procesos sospechosos con las reglas basicas.{RESET}")
+        print(
+            f"{GREEN}[+] No se detectaron procesos sospechosos con las reglas basicas.{RESET}"
+        )
         return
 
     # Si hubo alertas, se muestran una por una.
