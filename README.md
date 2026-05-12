@@ -2,6 +2,14 @@
 
 Sys Monitor es un script de consola que revisa procesos activos y marca algunos casos básicos que podrían requerir una revisión manual.
 
+## Screenshots
+
+![Sys Monitor](Screenshot%202025-05-26%20072739.png)
+![Sys Monitor](Screenshot%202025-05-26%20072826.png)
+![Sys Monitor](Screenshot%202025-05-26%20073855.png)
+![Sys Monitor](Screenshot%202025-05-26%20074119.png)
+![Sys Monitor Windows](win_sys_monitor.png)
+
 ## Funciones
 
 - Recorre procesos del sistema con `psutil`.
