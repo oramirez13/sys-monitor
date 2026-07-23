@@ -4,11 +4,12 @@ Cross-platform process security scanner for Linux and Windows. Scans active proc
 
 ## Screenshots
 
-![Sys Monitor](Screenshot%202025-05-26%20072739.png)
-![Sys Monitor](Screenshot%202025-05-26%20072826.png)
-![Sys Monitor](Screenshot%202025-05-26%20073855.png)
-![Sys Monitor](Screenshot%202025-05-26%20074119.png)
-![Sys Monitor Windows](win_sys_monitor.png)
+![Basic scan](img/Screenshot_20260723_123646.png)
+![Sys Monitor](img/Screenshot%202025-05-26%20072739.png)
+![Sys Monitor](img/Screenshot%202025-05-26%20072826.png)
+![Sys Monitor](img/Screenshot%202025-05-26%20073855.png)
+![Sys Monitor](img/Screenshot%202025-05-26%20074119.png)
+![Sys Monitor Windows](img/win_sys_monitor.png)
 
 ## Features
 
@@ -76,6 +77,7 @@ sys_monitor/
 ├── sys_monitor.py      # Main scanner script (Linux + Windows)
 ├── config.json         # Detection rules configuration
 ├── requirements.txt    # Python dependencies
+├── img/                # Screenshots
 ├── README.md           # Documentation
 └── .gitignore
 ```
