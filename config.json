@@ -1,0 +1,56 @@
+{
+    "trusted_paths_linux": [
+        "/usr/bin",
+        "/bin",
+        "/usr/sbin",
+        "/sbin",
+        "/usr/local/bin",
+        "/usr/lib",
+        "/usr/libexec",
+        "/lib"
+    ],
+    "trusted_paths_windows": [
+        "C:\\Windows\\System32",
+        "C:\\Windows\\SysWOW64",
+        "C:\\Program Files",
+        "C:\\Program Files (x86)"
+    ],
+    "suspicious_names_linux": [
+        "mimikatz",
+        "metasploit",
+        "nc",
+        "netcat",
+        "socat",
+        "nmap",
+        "hydra",
+        "john",
+        "hashcat",
+        "aircrack-ng",
+        "burpsuite",
+        "sqlmap"
+    ],
+    "suspicious_names_windows": [
+        "mimikatz.exe",
+        "psexec.exe",
+        "procdump.exe",
+        "nc.exe",
+        "ncat.exe",
+        "netcat.exe"
+    ],
+    "critical_windows_processes": [
+        "lsass.exe",
+        "svchost.exe",
+        "wininit.exe",
+        "services.exe",
+        "csrss.exe"
+    ],
+    "suspicious_ports": [
+        4444,
+        5555,
+        6666,
+        1337,
+        31337,
+        1234,
+        9999
+    ]
+}
